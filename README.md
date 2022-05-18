@@ -15,7 +15,7 @@ TinyGoogle built with Flask + Bootstrap + Google CSE
 ## Features
 
 * Search content by Google Custom Search API
-* Ignore [GFW](https://en.wikipedia.org/wiki/Great_Firewall) to use google search
+* No reCAPTCHA
 
 ## Search Times
 
