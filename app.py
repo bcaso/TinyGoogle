@@ -7,6 +7,13 @@ import requests
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
+# TODO 设置代理, set http proxy
+proxies = {
+  "http": "http://10.0.0.2:9091",
+  "https": "https://10.0.0.2:9091",
+}
+
+
 @app.route('/')
 def index():
     return render_template('index.html',name='index')
@@ -34,7 +41,9 @@ def query():
                 query_string = {"key":key,"cx":cx,"num":"10","q":q,"start":start_index}
             else :
                 query_string = {"key":key,"cx":cx,"num":"10","q":q}
-            response = requests.request("GET", url, params=query_string)
+            # response = requests.request("GET", url, params=query_string)
+            # set proxy
+            response = requests.request("GET", url, params=query_string, proxies=proxies)
             json_data = json.loads(response.text)
 
             try :
