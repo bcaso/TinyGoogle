@@ -62,11 +62,71 @@ If the demo run out of search times when you use, please try just another day.
 
   [Google CSE](https://cse.google.com/) & [Google API Console](https://console.developers.google.com/)
 
-## Todo
+3. set http proxy, in `app.py`, lines 11
 
-* -[x] update to python3
-* -[x] thumbnail switch
-* -[ ] doodle
+```
+# TODO 设置代理, set http proxy
+proxies = {
+  "http": "http://10.0.0.2:9091",
+  "https": "https://10.0.0.2:9091",
+}
+```
+
+
+## create a docker image
+
+I don't know how to write a dockerfile, so I decide to create a new docker image.
+
+```shell
+# 1. install python3.5
+docker pull python:3.5.10-slim-buster
+
+# 2. run it
+
+# 3. install vim, git
+apt-get -y install vim git
+
+# 4. git clone
+cd /home
+git clone https://github.com/bcaso/TinyGoogle
+# install packages, and rename config file
+pip install -r requirements.txt
+cd TinyGoogle/data
+mv engine.json engine.json.bak
+
+# 5. Have your engine.json ready, for example /home/bcaso/docker/tinyGoogle/engine.json
+
+# 6. config http proxy, at app.py, lines:11
+vim app.py
+
+# 7. start a new terminal, run `docker ps`, then commit it to a new docker image.
+docker ps
+docker commit -m 'tinyGoogle configured' {continer running id} tinyGoogle:0.1
+
+# 8. stop and remove old container
+docker ps
+docker rm -f {tinyGoogle old container id}
+```
+
+run it:
+
+```shell
+sudo docker run -itd \
+    -p 8000:8000 \
+    -w /home/TinyGoogle \
+    --restart=always \
+    --name tinygoogle \
+    -v /home/bcaso/docker/tinyGoogle/engine.json:/home/TinyGoogle/data/engine.json \
+    tinygoogle:0.1 \
+    gunicorn --bind 0.0.0.0:8000 app:app
+```
+
+Auto load next page:  
+https://chrome.google.com/webstore/detail/uautopagerize/kdplapeciagkkjoignnkfpbfkebcfbpb
+
+![image](https://user-images.githubusercontent.com/32212684/169082099-b6db1e77-69b6-4bd6-a361-312d37e09239.png)
+
+
 
 ## License
 
